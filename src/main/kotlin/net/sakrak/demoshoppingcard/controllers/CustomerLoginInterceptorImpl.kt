@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.lang.Nullable
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.ModelAndView
+import org.springframework.web.servlet.view.RedirectView
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -25,7 +26,7 @@ class CustomerLoginInterceptorImpl : CustomerLoginInterceptor {
         handler: Any,
         @Nullable modelAndView: ModelAndView?
     ) {
-        if (modelAndView == null) {
+        if (modelAndView == null || modelAndView.view is RedirectView) {
             return
         }
 
