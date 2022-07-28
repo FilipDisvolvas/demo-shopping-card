@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 @ActiveProfiles(value = ["test"])
 class CustomerIT {
     @Autowired
-    private lateinit var mockMvc: MockMvc
+    private lateinit var mockMvc: SessionAwareMockMvc
 
     @Autowired
     private lateinit var productService: ProductService
@@ -38,18 +38,12 @@ class CustomerIT {
 
     @Test
     fun createAndLogin() {
-        var session = executeAndGetSession {
             mockMvc.perform(get("/")).andExpect(status().isOk)
                 .andExpect(xpath("//form[@action='/customers/login']").exists())
-        }
 
-        session = executeAndGetSession {
             mockMvc.perform(get("/customers/registration")).andExpect(status().isOk)
-        }
 
-        session = executeAndGetSession {
             val createCustomerRequest = post("/customers/registration")
-                .session(session)
                 .param("firstName", "First")
                 .param("middleName", "")
                 .param("lastName", "Last")
@@ -60,21 +54,15 @@ class CustomerIT {
                 .param("password", "123456")
                 .param("passwordRepitition", "123456")
             mockMvc.perform(createCustomerRequest).andExpect(status().is3xxRedirection)
-        }
 
-        session = executeAndGetSession {
             val loginRequest = post("/customers/login")
-                .session(session)
                 .param("email", "test@invalid.foo")
                 .param("password", "123456")
             mockMvc.perform(loginRequest).andExpect(status().is3xxRedirection)
-        }
 
-        session = executeAndGetSession {
-            mockMvc.perform(get("/").session(session))
+            mockMvc.perform(get("/"))
                 .andExpect(xpath("//form[@action='/customers/login']").doesNotExist())
                 .andExpect(content().string(containsString("Hallo, <span>First</span>!")))
-        }
     }
 
     private fun executeAndGetSession(supplier: () -> ResultActions): MockHttpSession {
