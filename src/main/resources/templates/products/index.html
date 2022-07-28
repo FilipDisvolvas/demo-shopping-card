@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head th:insert="/fragments/_general :: htmlHead">
+        <meta charset="UTF-8">
+        <title>$Title$</title>
+    </head>
+    <body>
+        <header th:insert="/fragments/_general :: header"> </header>
+
+        <!--@thymesVar id="products" type="List<net.sakrak.demoshoppingcard.domain.Product>"-->
+        <!--@thymesVar id="product" type="net.sakrak.demoshoppingcard.domain.Product"-->
+        <h2>Tolle Produktliste</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th> Title</th>
+                    <th> Author</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="product : ${products}">
+                    <td><span th:text="${product.name}"> Title </span></td>
+                    <td><span th:text="${product.description}"> Author </span></td>
+                    <td>
+                        <form action="#" th:action="@{/basket}" th:object="${newBasketEntry}" method="post">
+                            <input type="hidden" name="productId" th:value="${product.id}"/>
+                            <input type="hidden" name="quantity" th:value="1"/>
+                            <button type="submit" class="fa-solid fa-cart-arrow-down" />
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- footer th:insert="/fragments/_general :: footer"> </footer -->
+    </body>
+</html>

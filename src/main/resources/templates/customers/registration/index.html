@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="/fragments/_general :: htmlHead">
+  <meta charset="UTF-8">
+  <title>$Title$</title>
+</head>
+<body>
+  <header th:insert="/fragments/_general :: header"> </header>
+  <!--@thymesVar id="newCustomer" type="net.sakrak.demoshoppingcard.commands.CreateCustomerCommand"-->
+
+  <h2>Neues Benutzerkonto anlegen</h2>
+
+  <form action="#" th:action="@{/customers/registration}" th:object="${newCustomer}" method="post">
+    <table>
+      <tr>
+        <td>First name<sup>*</sup>:</td><td><input type="text" th:field="*{firstName}" /></td>
+        <td>Middle name:</td><td><input type="text" th:field="*{middleName}" /></td>
+      </tr>
+      <tr><td>Last name<sup>*</sup>:</td><td><input type="text" th:field="*{lastName}" /></td></tr>
+      <tr><td>E-Mail<sup>*</sup>:</td><td><input type="text" th:field="*{email}" /></td></tr>
+      <tr><td>Adresse (1. Zeile)<sup>*</sup>:</td><td><input type="text" th:field="*{addressFirstLine}" /></td></tr>
+      <tr><td>Adresse (2. Zeile)<sup>*</sup>:</td><td><input type="text" th:field="*{addressSecondLine}" /></td></tr>
+      <tr><td>Adresse (3. Zeile):</td><td><input type="text" th:field="*{addressThirdLine}" /></td></tr>
+      <tr><td>Passwort<sup>*</sup>:</td><td><input type="password" th:field="*{password}" /></td></tr>
+      <tr><td>Passwort (Wiederholung)<sup>*</sup>:</td><td><input type="password" th:field="*{passwordRepitition}" /></td></tr>
+    </table>
+
+    <p><input type="submit" value="Submit" /></p>
+  </form>
+
+</body>
+</html>

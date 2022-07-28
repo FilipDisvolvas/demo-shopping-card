@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:insert="/fragments/_general :: htmlHead">
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+  </head>
+  <body>
+    <header th:insert="/fragments/_general :: header"> </header>
+
+    <h2>Deine Daten aktualisieren</h2>
+    <form action="#" th:action="@{/customers/edit}" th:object="${updateCommand}" method="post">
+      <input type="hidden" name="_method" value="put" />
+      <table>
+        <tr>
+          <td>First name<sup>*</sup>:</td><td><input type="text" th:field="*{firstName}" /></td>
+          <td>Middle name:</td><td><input type="text" th:field="*{middleName}" /></td>
+        </tr>
+        <tr><td>Last name<sup>*</sup>:</td><td><input type="text" th:field="*{lastName}" /></td></tr>
+        <tr><td>E-Mail<sup>*</sup>:</td><td><input type="text" th:field="*{email}" /></td></tr>
+        <tr><td>Adresse (1. Zeile)<sup>*</sup>:</td><td><input type="text" th:field="*{addressFirstLine}" /></td></tr>
+        <tr><td>Adresse (2. Zeile)<sup>*</sup>:</td><td><input type="text" th:field="*{addressSecondLine}" /></td></tr>
+        <tr><td>Adresse (3. Zeile):</td><td><input type="text" th:field="*{addressThirdLine}" /></td></tr>
+      </table>
+
+      <p><input type="submit" value="Submit" /></p>
+    </form>
+  </body>
+</html>

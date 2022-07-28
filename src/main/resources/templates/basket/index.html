@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="/fragments/_general :: htmlHead">
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+</head>
+<body>
+    <header th:insert="/fragments/_general :: header"> </header>
+
+    <h2>Warenkorb</h2>
+
+    <div class="alert alert-primary" role="alert" th:if="${#lists.isEmpty(basketEntries)}">
+        Dein Einkaufskorb ist leer!
+    </div>
+
+    <table th:if="${not #lists.isEmpty(basketEntries)}">
+        <thead>
+            <tr>
+                <th>Produktname</th>
+                <th>Anzahl</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="basketEntry : ${basketEntries}">
+                <td><span th:text="${basketEntry.product.name}"> Title </span></td>
+                <td>
+                    <form action="#" th:action="@{/basket/{productId}(productId=${basketEntry.product.id})}" th:method="put">
+                        <input type="hidden" name="_method" value="put"/>
+                        <input th:type="hidden" th:name="productId" th:value="${basketEntry.product.id}" />
+                        <input th:type="text" th:name="quantity" th:value="${basketEntry.quantity}" pattern="[0-9][0-9]?" style="width: 2em" />
+                        <button type="submit" class="fa-solid fa-check" />
+                    </form>
+                </td>
+                <td style="padding: 2em">
+                    <form action="#" th:action="@{/basket/{productId}(productId=${basketEntry.product.id})}" th:method="delete">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit" class="fa-solid fa-trash-can" />
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
