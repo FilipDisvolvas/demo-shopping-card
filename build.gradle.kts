@@ -9,6 +9,7 @@ plugins {
     kotlin("plugin.jpa") version "1.6.21"
     id("io.freefair.lombok") version "6.5.0.3"
     id("org.unbroken-dome.test-sets") version "4.0.0"
+    jacoco
 }
 
 group = "net.sakrak"
@@ -63,4 +64,11 @@ tasks.withType<Test> {
 
 testSets {
     create("integrationTest")
+}
+
+tasks.jacocoTestReport {
+    reports {
+        csv.isEnabled = true
+        html.isEnabled = true
+    }
 }
