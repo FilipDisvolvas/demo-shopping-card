@@ -67,6 +67,8 @@ testSets {
 }
 
 tasks.jacocoTestReport {
+    getExecutionData().setFrom(fileTree(buildDir).include("/jacoco/*.exec"))
+
     reports {
         csv.isEnabled = true
         html.isEnabled = true
