@@ -43,7 +43,6 @@ class CustomerServiceTest {
         assertThat(customer.addressSecondLine, equalTo(customerCommand.addressSecondLine))
         assertThat(customer.addressThirdLine, equalTo(customerCommand.addressThirdLine))
         assertThat(customer.hashedPassword, notNullValue())
-
-        assertThat(customer.hashedPassword, matchesPattern("^\\$2a\\$16\\$[0-9a-zA-Z/-]+\\.[0-9a-zA-Z/-]+\$"))
+        assertThat(customer.hashedPassword, startsWith("$2a$"))
     }
 }
