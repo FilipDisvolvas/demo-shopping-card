@@ -6,9 +6,6 @@ import javax.validation.constraints.NotBlank
 @Entity
 @Table(indexes = [Index(columnList = "email")])
 class Customer() : BaseEntity() {
-    constructor(firstName: String, middleName: String, lastName: String,
-                email: String, addressFirstLine: String, addressSecondLine: String, addressThirdLine: String) : this()
-
     @Column
     @NotBlank
     lateinit var firstName : String

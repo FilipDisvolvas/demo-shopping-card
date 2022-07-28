@@ -61,7 +61,7 @@ class BasketServiceImpl(
         val (product: Product?, foundBasketEntry: BasketEntry?) = basket.entries
             .filter { it.product.id == productId }
             .map { Pair(it.product, it) }
-            .first()
+            .firstOrNull() ?: Pair(null, null)
 
         return if (product != null) {
             basket.entries.remove(foundBasketEntry)

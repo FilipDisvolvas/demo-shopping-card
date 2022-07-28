@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import javax.servlet.http.HttpServletRequest
 
-open abstract class AbstractController {
+abstract class AbstractController {
     @Autowired
     private lateinit var redirectService: RedirectService
 

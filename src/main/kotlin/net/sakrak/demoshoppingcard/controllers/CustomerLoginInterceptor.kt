@@ -26,7 +26,7 @@ class CustomerLoginInterceptor : HandlerInterceptor {
         handler: Any,
         @Nullable modelAndView: ModelAndView?
     ) {
-        if (modelAndView == null || modelAndView.model == null) {
+        if (modelAndView == null) {
             return
         }
 
@@ -35,10 +35,10 @@ class CustomerLoginInterceptor : HandlerInterceptor {
         if (customerId != null) {
             val customer = customerService.findById(customerId)
             val basketEntries = basketService.getBasketEntries(customerId)
-            modelAndView!!.model["greetingCustomerName"] = customer!!.firstName
+            modelAndView.model["greetingCustomerName"] = customer!!.firstName
             modelAndView.model["greetingBasketEntries"] = basketEntries.sumOf { it.quantity }
         } else {
-            modelAndView!!.model["loginCommand"] = LoginCommand(email = null, password = null)
+            modelAndView.model["loginCommand"] = LoginCommand(email = null, password = null)
         }
     }
 }
