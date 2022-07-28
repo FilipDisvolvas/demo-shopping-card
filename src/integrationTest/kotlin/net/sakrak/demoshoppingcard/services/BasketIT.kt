@@ -1,6 +1,7 @@
 package net.sakrak.demoshoppingcard.services
 
 import net.sakrak.demoshoppingcard.commands.*
+import net.sakrak.demoshoppingcard.controllers.CustomerLoginInterceptor
 import net.sakrak.demoshoppingcard.domain.BasketEntry
 import net.sakrak.demoshoppingcard.dto.CustomerDto
 import net.sakrak.demoshoppingcard.dto.ProductDto
@@ -18,13 +19,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
 import org.springframework.test.context.ActiveProfiles
 
 @DataJpaTest(
     includeFilters = [ComponentScan.Filter(Service::class),
-        ComponentScan.Filter(Repository::class), ComponentScan.Filter(Configuration::class)]
+        ComponentScan.Filter(Repository::class), ComponentScan.Filter(Configuration::class),
+        ComponentScan.Filter(Component::class)]
 )
 @ActiveProfiles(value = ["test"])
 class BasketIT {
@@ -151,5 +154,24 @@ class BasketIT {
         basketEntriesAfterUpdate = basketService.getBasketEntries(savedCustomer.id!!)
         product2entry = basketEntriesAfterUpdate.find { it.product.id == savedProductDto2.id } ?: throw ProductNotFoundException()
         assertThat(product2entry.quantity, equalTo(10))
+
+        // Product 2 aus dem Korb löschen
+        basketService.deleteBasketEntry(
+            customerId = savedCustomer.id!!,
+            productId = savedProductDto2.id
+        )
+
+        // Refresh...
+        basketEntriesAfterUpdate = basketService.getBasketEntries(savedCustomer.id!!)
+
+        val foundDeletedBasketEntry: BasketEntry? = basketEntriesAfterUpdate.find { it.product.id == savedProductDto2.id }
+        assertThat(foundDeletedBasketEntry, `is`(nullValue()))
+
+        // Produkt aus dem Warenkorb löschen, welches gar nicht im Warenkorb ist.
+        val invalidProduct = basketService.deleteBasketEntry(
+            customerId = savedCustomer.id!!,
+            productId = 348342
+        )
+        assertThat(invalidProduct, `is`(nullValue()))
     }
 }
