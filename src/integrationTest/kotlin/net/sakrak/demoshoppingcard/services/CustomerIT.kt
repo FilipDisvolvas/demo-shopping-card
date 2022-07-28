@@ -12,6 +12,7 @@ import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.mock.web.MockHttpSession
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
@@ -37,33 +38,46 @@ class CustomerIT {
 
     @Test
     fun createAndLogin() {
-        val session = mockMvc.perform(get("/")).andExpect(status().isOk)
-            .andExpect(xpath("//form[@action='/customers/login']").exists())
-            .andReturn().request.session as MockHttpSession
+        var session = executeAndGetSession {
+            mockMvc.perform(get("/")).andExpect(status().isOk)
+                .andExpect(xpath("//form[@action='/customers/login']").exists())
+        }
 
-        mockMvc.perform(get("/customers/registration")).andExpect(status().isOk)
+        session = executeAndGetSession {
+            mockMvc.perform(get("/customers/registration")).andExpect(status().isOk)
+        }
 
-        val createCustomerRequest = post("/customers/registration")
-            .session(session)
-            .param("firstName", "First")
-            .param("middleName", "")
-            .param("lastName", "Last")
-            .param("email", "test@invalid.foo")
-            .param("addressFirstLine", "Example Avenue 42")
-            .param("addressSecondLine", "42420 Entenhausen")
-            .param("addressThirdLine", "")
-            .param("password", "123456")
-            .param("passwordRepitition", "123456")
+        session = executeAndGetSession {
+            val createCustomerRequest = post("/customers/registration")
+                .session(session)
+                .param("firstName", "First")
+                .param("middleName", "")
+                .param("lastName", "Last")
+                .param("email", "test@invalid.foo")
+                .param("addressFirstLine", "Example Avenue 42")
+                .param("addressSecondLine", "42420 Entenhausen")
+                .param("addressThirdLine", "")
+                .param("password", "123456")
+                .param("passwordRepitition", "123456")
+            mockMvc.perform(createCustomerRequest).andExpect(status().is3xxRedirection)
+        }
 
-        mockMvc.perform(createCustomerRequest).andExpect(status().is3xxRedirection)
+        session = executeAndGetSession {
+            val loginRequest = post("/customers/login")
+                .session(session)
+                .param("email", "test@invalid.foo")
+                .param("password", "123456")
+            mockMvc.perform(loginRequest).andExpect(status().is3xxRedirection)
+        }
 
-        val loginCustomerRequest = post("/customers/login")
-            .session(session)
-            .param("email", "test@invalid.foo")
-            .param("password", "123456")
+        session = executeAndGetSession {
+            mockMvc.perform(get("/").session(session))
+                .andExpect(xpath("//form[@action='/customers/login']").doesNotExist())
+                .andExpect(content().string(containsString("Hallo, <span>First</span>!")))
+        }
+    }
 
-        mockMvc.perform(get("/").session(session))
-            .andExpect(xpath("//form[@action='/customers/login']").doesNotExist())
-            .andExpect(content().string(containsString("Hallo, <span>First</span>!")))
+    private fun executeAndGetSession(supplier: () -> ResultActions): MockHttpSession {
+        return supplier.invoke().andReturn().request.session as MockHttpSession
     }
 }
