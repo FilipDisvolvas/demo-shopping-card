@@ -1,3 +1,13 @@
 package net.sakrak.demoshoppingcard.commands
 
-data class CreateBasketEntryCommand(var productId: Long? = null, var quantity: Int? = null)
+import javax.validation.constraints.Min
+import javax.validation.constraints.NotBlank
+
+data class CreateBasketEntryCommand(
+    @field:NotBlank
+    var productId: Long? = null,
+
+    @field:NotBlank
+    @field:Min(1)
+    var quantity: Int? = null
+)

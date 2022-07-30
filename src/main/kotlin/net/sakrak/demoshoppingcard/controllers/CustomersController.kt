@@ -5,32 +5,43 @@ import net.sakrak.demoshoppingcard.commands.LoginCommand
 import net.sakrak.demoshoppingcard.commands.UpdateCustomerCommand
 import net.sakrak.demoshoppingcard.converters.CustomerConverter.customerToUpdateCommand
 import net.sakrak.demoshoppingcard.services.CustomerService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.MessageSource
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
-import org.springframework.validation.annotation.Validated
+import org.springframework.validation.FieldError
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.LocaleResolver
 import org.springframework.web.servlet.ModelAndView
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import javax.servlet.http.HttpServletRequest
+import javax.validation.Valid
 
 
 @Controller
 @RequestMapping("customers")
-class CustomersController(private val customerService: CustomerService) : AbstractController() {
+class CustomersController(private val customerService: CustomerService) : AbstractController(), WebMvcConfigurer {
     @GetMapping("/registration")
     fun registrationForm(model: Model) : String {
-        model.addAttribute("newCustomer", CreateCustomerCommand())
+        model.addAttribute("customerCommand", CreateCustomerCommand())
 
         return "customers/registration/index"
     }
 
     @PostMapping("/registration")
-    fun create(@ModelAttribute customerCommand: CreateCustomerCommand, model: Model, attributes: RedirectAttributes, request: HttpServletRequest) : ModelAndView {
-        // TODO: Validation
+    fun create(@ModelAttribute("customerCommand") @Valid customerCommand: CreateCustomerCommand, bindingResult: BindingResult, model: Model, attributes: RedirectAttributes, request: HttpServletRequest) : ModelAndView {
+
+        if (bindingResult.hasErrors()) {
+            return ModelAndView("customers/registration/index", mapOf("customerCommand" to customerCommand))
+        }
+
         customerService.create(customerCommand)
 
-        return redirectWithSuccessMsg("/", "Die Registrierung ist abgeschlossen.", attributes)
+        return ModelAndView("customers/registration/index", mapOf("customerCommand" to customerCommand))
+
+        //return redirectWithSuccessMsg("/", "Die Registrierung ist abgeschlossen.", attributes)
     }
 
     @GetMapping("/edit")
@@ -57,19 +68,12 @@ class CustomersController(private val customerService: CustomerService) : Abstra
     }
 
     @PostMapping("/login")
-    fun login(@ModelAttribute @Validated loginCommand: LoginCommand, bindingResult: BindingResult, attributes: RedirectAttributes, request: HttpServletRequest) : ModelAndView {
-        // TODO: Validation **richtig** nutzen
-        /*
-            if (bindingResult.hasErrors()) {
-                val errorMsg = bindingResult.allErrors.map { it.defaultMessage }.joinToString("; ")
-                attributes.addFlashAttribute("flashAttribute", errorMsg)
-                return RedirectView("/")
-            }
-         */
+    fun login(@Valid @ModelAttribute loginCommand: LoginCommand, bindingResult: BindingResult, attributes: RedirectAttributes, request: HttpServletRequest) : ModelAndView {
+        if (bindingResult.hasErrors()) {
+            val errorMsg = bindingResultTranslator.getMessages(bindingResult, request).joinToString("; ")
 
-        if (loginCommand.email?.isEmpty() != false || loginCommand.password?.isEmpty() != false) {
-            return redirectWithErrorMsg("/", "E-Adresse und Passwort dürfen nicht leer sein!", attributes)
-        }
+            return redirectWithErrorMsg("/", errorMsg, attributes)
+            }
 
         val foundCustomer = customerService.findByLogin(loginCommand)
 

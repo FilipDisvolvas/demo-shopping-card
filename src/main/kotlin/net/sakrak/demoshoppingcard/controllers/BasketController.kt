@@ -10,11 +10,13 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.ModelMap
 import org.springframework.ui.set
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import org.springframework.web.servlet.view.RedirectView
 import javax.servlet.http.HttpServletRequest
+import javax.validation.Valid
 
 @Controller
 class BasketController : AbstractController() {
@@ -33,17 +35,13 @@ class BasketController : AbstractController() {
     }
 
     @PostMapping("/basket")
-    fun create(@ModelAttribute basketEntryCommand: CreateBasketEntryCommand, attributes: RedirectAttributes, request: HttpServletRequest) : ModelAndView {
+    fun create(@Valid @ModelAttribute basketEntryCommand: CreateBasketEntryCommand, bindingResult: BindingResult, attributes: RedirectAttributes, request: HttpServletRequest) : ModelAndView {
 
         val customerId = customerId(request) ?: return redirectWithLoginErrorMsg(request, attributes)
 
-        // TODO: Echte Validations verwenden!
-        if (basketEntryCommand.productId == null) {
-            return redirectWithErrorMsg(request, "Produkt nicht angegeben!", attributes)
-        }
-
-        if (basketEntryCommand.quantity == null || basketEntryCommand.quantity == 0) {
-            return redirectWithErrorMsg(request, "Produkt nicht angegeben!", attributes)
+        if (bindingResult.hasErrors()) {
+            val errorMessage = bindingResultTranslator.getMessages(bindingResult, request).joinToString("; ")
+            return redirectWithErrorMsg(request, errorMessage, attributes)
         }
 
         val product = basketService.addToBasket(customerId, basketEntryCommand)
