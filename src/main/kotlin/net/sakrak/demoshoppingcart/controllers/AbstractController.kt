@@ -5,6 +5,8 @@ import net.sakrak.demoshoppingcart.services.BindingResultTranslator
 import net.sakrak.demoshoppingcart.services.CustomerService
 import net.sakrak.demoshoppingcart.services.RedirectService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.ui.Model
+import org.springframework.ui.set
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import javax.servlet.http.HttpServletRequest
@@ -28,7 +30,7 @@ abstract class AbstractController {
 
     protected fun redirectWithSuccessMsg(request: HttpServletRequest, message: String, attributes: RedirectAttributes) : ModelAndView {
         attributes.addFlashAttribute("successFlash", message)
-        return redirectService.buildCleanRedirect(request.getHeader("Referer"))
+        return redirectService.buildCleanRedirect(request.getHeader("Referer") ?: "/")
     }
 
     protected fun redirectWithErrorMsg(url: String, message: String, attributes: RedirectAttributes) : ModelAndView {
@@ -38,11 +40,20 @@ abstract class AbstractController {
 
     protected fun redirectWithErrorMsg(request: HttpServletRequest, message: String, attributes: RedirectAttributes) : ModelAndView {
         attributes.addFlashAttribute("errorFlash", message)
-        return redirectService.buildCleanRedirect(request.getHeader("Referer"))
+        return redirectService.buildCleanRedirect(request.getHeader("Referer") ?: "/")
+    }
+
+    protected fun addFormErrorFlashMessage(modelAndView: ModelAndView): ModelAndView {
+        modelAndView.model["errorFlash"] = "Bitte korrigiere die unten aufgeführten Fehler"
+        return modelAndView
     }
 
     protected fun redirectWithLoginErrorMsg(request: HttpServletRequest, attributes: RedirectAttributes) : ModelAndView {
         return redirectWithErrorMsg(request.getHeader("Referer"), "Du bist nicht eingeloggt",  attributes)
+    }
+
+    protected fun isLoggedIn(request: HttpServletRequest): Boolean {
+        return request.session.getAttribute("customerId") != null
     }
 
     protected fun customerId(request: HttpServletRequest): Long? {

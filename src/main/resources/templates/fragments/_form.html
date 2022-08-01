@@ -5,9 +5,9 @@
     <title>$Title$</title>
 </head>
 <body>
-  <div th:fragment="inputText" class="form-group mb-2">
+  <div th:fragment="inputText" class="form-group mb-11">
     <label class="col-sm-5 col-form-label" th:for="${inputField}" th:text="#{${entityName} + '.' + ${inputField}} + ${#objects.nullSafe(required, false) ? ' *' : ''}">First name</label>
-    <input th:classappend="${#fields.hasErrors(inputField) ? 'is-invalid' : ''}" type="text" th:field="*{__${inputField}__}" />
+    <input  th:classappend="${#fields.hasErrors(inputField) ? 'is-invalid' : ''}" type="text" th:field="*{__${inputField}__}" />
     <div th:if="${#fields.hasErrors(inputField)}" th:errors="*{__${inputField}__}">dfsdfsdf</div>
   </div>
 
