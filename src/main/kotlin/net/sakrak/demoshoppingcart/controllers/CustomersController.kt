@@ -23,14 +23,13 @@ class CustomersController(private val customerService: CustomerService) : Abstra
     fun registrationForm(model: Model) : String {
         model.addAttribute("customerCommand", CreateCustomerCommand())
 
-        return "customers/registration/index"
+        return "customers/new"
     }
 
     @PostMapping("/registration")
     fun create(@ModelAttribute("customerCommand") @Valid customerCommand: CreateCustomerCommand, bindingResult: BindingResult, model: Model, attributes: RedirectAttributes, request: HttpServletRequest) : ModelAndView {
-
         if (bindingResult.hasErrors()) {
-            return ModelAndView("customers/registration/index", mapOf("customerCommand" to customerCommand))
+            return addFormErrorFlashMessage(ModelAndView("customers/new", mapOf("customerCommand" to customerCommand)))
         }
 
         customerService.create(customerCommand)
@@ -51,9 +50,13 @@ class CustomersController(private val customerService: CustomerService) : Abstra
     }
 
     @PutMapping("/edit")
-    fun update(@ModelAttribute customerCommand: UpdateCustomerCommand, attributes: RedirectAttributes, request: HttpServletRequest) : ModelAndView {
+    fun update(@ModelAttribute @Valid customerCommand: UpdateCustomerCommand, bindingResult: BindingResult, attributes: RedirectAttributes, request: HttpServletRequest) : ModelAndView {
         if (customerId(request) == null) {
             return redirectWithLoginErrorMsg(request, attributes)
+        }
+
+        if (bindingResult.hasErrors()) {
+            return addFormErrorFlashMessage(ModelAndView("customers/edit", mapOf("updateCommand" to customerCommand)))
         }
 
         customerService.update(customerId(request)!!, customerCommand)
@@ -67,7 +70,7 @@ class CustomersController(private val customerService: CustomerService) : Abstra
             val errorMsg = bindingResultTranslator.getMessages(bindingResult, request).joinToString("; ")
 
             return redirectWithErrorMsg("/", errorMsg, attributes)
-            }
+        }
 
         val foundCustomer = customerService.findByLogin(loginCommand)
 
