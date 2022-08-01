@@ -18,13 +18,13 @@ jobs:
           java-version: '17'
           cache: 'gradle'
       - run:
-          ##./gradlew clean build integrationTest --no-daemon &&
+          ./gradlew clean build integrationTest --no-daemon &&
           git config --global user.name "github-actions[bot]" &&
           git config --global user.email "51759+github-actions[bot]@users.noreply.github.com" &&
-          git branch --show-current &&
           git fetch --unshallow &&
           git checkout -B master origin/master &&
           git checkout develop &&
           git merge master --no-edit &&
           git checkout master &&
-          git merge develop --no-edit
+          git merge develop --no-edit &&
+          git push
