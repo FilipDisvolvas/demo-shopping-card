@@ -20,17 +20,17 @@ class I18nServiceImpl : I18nService {
     @Autowired
     lateinit var localeResolver: LocaleResolver
 
-    override fun getMessage(i18nCode: String, request: HttpServletRequest): String? {
+    override fun getMessage(request: HttpServletRequest, i18nCode: String, vararg placeholderValues: String): String? {
         val locale = localeResolver.resolveLocale(request)
 
         return if (env.activeProfiles.contains("test")) {
-                messageSource.getMessage(i18nCode, arrayOf(), locale)
+                messageSource.getMessage(i18nCode, placeholderValues, locale)
         } else {
-                messageSource.getMessage(i18nCode, arrayOf(), i18nCode, locale)
+                messageSource.getMessage(i18nCode, placeholderValues, i18nCode, locale)
         }
     }
 
-    override fun getMessages(bindingResult: BindingResult, request: HttpServletRequest): List<String> {
+    override fun getMessages(request: HttpServletRequest, bindingResult: BindingResult): List<String> {
         val locale = localeResolver.resolveLocale(request)
 
         val i18nLookup = if (env.activeProfiles.contains("test")) {

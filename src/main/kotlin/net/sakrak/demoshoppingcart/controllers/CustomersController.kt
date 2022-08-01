@@ -8,6 +8,7 @@ import net.sakrak.demoshoppingcart.services.CustomerService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
+import org.springframework.validation.ObjectError
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
@@ -34,7 +35,7 @@ class CustomersController(private val customerService: CustomerService) : Abstra
 
         customerService.create(customerCommand)
 
-        return redirectWithSuccessMsg("/", "Die Registrierung ist abgeschlossen.", attributes)
+        return redirectWithSuccessMsg(request, "/", attributes, "customersController.successCreate")
     }
 
     @GetMapping("/edit")
@@ -61,24 +62,22 @@ class CustomersController(private val customerService: CustomerService) : Abstra
 
         customerService.update(customerId(request)!!, customerCommand)
 
-        return redirectWithSuccessMsg(request, "Deine Daten wurden erfolgreich aktualisiert", attributes)
+        return redirectWithSuccessMsg(request, attributes, "customersController.successUpdate")
     }
 
     @PostMapping("/login")
     fun login(@Valid @ModelAttribute loginCommand: LoginCommand, bindingResult: BindingResult, attributes: RedirectAttributes, request: HttpServletRequest) : ModelAndView {
         if (bindingResult.hasErrors()) {
-            val errorMsg = i18nService.getMessages(bindingResult, request).joinToString("; ")
-
-            return redirectWithErrorMsg("/", errorMsg, attributes)
+            return redirectWithErrorMsg(request, attributes, bindingResult)
         }
 
         val foundCustomer = customerService.findByLogin(loginCommand)
 
         return if (foundCustomer == null) {
-            redirectWithErrorMsg("/", "E-Mail-Adresse oder Passwort falsch", attributes)
+            redirectWithErrorMsg(request, "/", attributes, "customerController.invalidLogin")
         } else {
             request.session.setAttribute("customerId", foundCustomer.id)
-            redirectWithSuccessMsg("/", "Erfolgreich eingeloggt!", attributes)
+            redirectWithSuccessMsg(request, "/", attributes, "customerController.successLogin")
         }
     }
 
@@ -88,6 +87,6 @@ class CustomersController(private val customerService: CustomerService) : Abstra
             request.session.removeAttribute(attributeName)
         }
 
-        return redirectWithSuccessMsg("/", "Erfolgreich ausgeloggt!", attributes)
+        return redirectWithSuccessMsg(request, "/", attributes,"customersController.successLogout")
     }
 }

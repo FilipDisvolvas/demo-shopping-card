@@ -37,13 +37,12 @@ class BasketController : AbstractController() {
         val customerId = customerId(request) ?: return redirectWithLoginErrorMsg(request, attributes)
 
         if (bindingResult.hasErrors()) {
-            val errorMessage = i18nService.getMessages(bindingResult, request).joinToString("; ")
-            return redirectWithErrorMsg(request, errorMessage, attributes)
+            return redirectWithErrorMsg(request, attributes, bindingResult)
         }
 
         val product = basketService.addToBasket(customerId, basketEntryCommand)
 
-        return redirectWithSuccessMsg(request, "Artikel \"${product.name}\" erfolgreich dem Warenkorb hinzugefügt!", attributes)
+        return redirectWithSuccessMsg(request, attributes, "basketController.successCreate", product.name)
     }
 
     @PutMapping("/basket/{productId}")
@@ -52,7 +51,7 @@ class BasketController : AbstractController() {
 
         val product = basketService.updateBasketEntry(customerId, updateBasketEntryCommand.copy(productId = productId))
 
-        return redirectWithSuccessMsg(request, "Anzahl für Artikel \"${product.name}\" erfolgreich aktualisiert!", attributes)
+        return redirectWithSuccessMsg(request, attributes, "basketController.successUpdate", product.name)
     }
 
     @DeleteMapping("/basket/{productId}")
@@ -62,7 +61,8 @@ class BasketController : AbstractController() {
         val affectedProduct: ProductDto? = basketService.deleteBasketEntry(customerId, productId)
 
         if (affectedProduct != null) {
-            attributes.addFlashAttribute("successFlash", "Artikel \"${affectedProduct.name}\" erfolgreich aus dem Warenkorb entfernt.")
+            val message = i18nService.getMessage(request, "basketController.successDelete", affectedProduct.name)
+            attributes.addFlashAttribute("successFlash", message)
         }
 
         return redirectReferer(request)

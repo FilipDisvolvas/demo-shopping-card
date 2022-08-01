@@ -4,6 +4,6 @@ import org.springframework.validation.BindingResult
 import javax.servlet.http.HttpServletRequest
 
 interface I18nService {
-    fun getMessages(bindingResult: BindingResult, request: HttpServletRequest): List<String>
-    fun getMessage(i18nCode: String, request: HttpServletRequest): String?
+    fun getMessages(request: HttpServletRequest, bindingResult: BindingResult): List<String>
+    fun getMessage(request: HttpServletRequest, i18nCode: String, vararg placeholderValues: String): String?
 }
