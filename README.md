@@ -1,7 +1,7 @@
 Demo-Warenkorb
 ==============
 ![build status](https://github.com/FilipDisvolvas/demo-shopping-cart/actions/workflows/test-master.yml/badge.svg?branch=master)
-![test status](https://raw.githubusercontent.com/FilipDisvolvas/demo-shopping-cart/master/.github/badges/jacoco.svg?cache-buster=97)
+![test status](https://raw.githubusercontent.com/FilipDisvolvas/demo-shopping-cart/master/.github/badges/jacoco.svg?cache-buster=97289)
 
 
 Dies ist nur ein Spielwiesen-Projekt in Kotlin mit Spring-Boot.
