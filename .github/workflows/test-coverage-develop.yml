@@ -1,9 +1,9 @@
-name: feature branches
+name: develop branch
 on:
   push:
-    branches: [ 'feature/**' ]
+    branches: [ 'develop' ]
   pull_request:
-    branches: [ 'feature/**' ]
+    branches: [ 'develop' ]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,4 +17,11 @@ jobs:
           distribution: 'temurin' # See https://github.com/actions/setup-java
           java-version: '17'
           cache: 'gradle'
-      - run:  ./gradlew clean build integrationTest --no-daemon
+      - run:
+          ./gradlew clean build integrationTest --no-daemon &&
+          git checkout master &&
+          git pull &&
+          git checkout develop &&
+          git merge master --ff-only &&
+          git checkout master &&
+          git merge develop --ff-only
