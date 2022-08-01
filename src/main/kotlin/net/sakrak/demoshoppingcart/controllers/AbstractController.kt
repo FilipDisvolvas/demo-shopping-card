@@ -9,6 +9,9 @@ import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import org.springframework.web.util.UriBuilder
+import org.springframework.web.util.UriComponentsBuilder
+import java.net.URI
 import javax.servlet.http.HttpServletRequest
 
 abstract class AbstractController {
@@ -49,7 +52,7 @@ abstract class AbstractController {
     }
 
     protected fun redirectWithLoginErrorMsg(request: HttpServletRequest, attributes: RedirectAttributes) : ModelAndView {
-        return redirectWithErrorMsg(request.getHeader("Referer"), "Du bist nicht eingeloggt",  attributes)
+        return redirectWithErrorMsg(buildRedirectUrl(request), "Du bist nicht eingeloggt",  attributes)
     }
 
     protected fun isLoggedIn(request: HttpServletRequest): Boolean {
@@ -67,6 +70,17 @@ abstract class AbstractController {
             customerService.findById(customerId)
         } else {
             null
+        }
+    }
+
+    protected fun buildRedirectUrl(request: HttpServletRequest): String {
+        var redirectUri = request.getHeader("Referer") ?: "/"
+
+        return if (redirectUri.contains("redirected=true")) {
+            "/"
+        } else {
+            val uri = URI(redirectUri)
+            UriComponentsBuilder.fromUri(uri).queryParam("redirected", "true").build().toUriString()
         }
     }
 }
