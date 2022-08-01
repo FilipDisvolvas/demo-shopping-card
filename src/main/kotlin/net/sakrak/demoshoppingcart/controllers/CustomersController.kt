@@ -29,7 +29,7 @@ class CustomersController(private val customerService: CustomerService) : Abstra
     @PostMapping("/registration")
     fun create(@ModelAttribute("customerCommand") @Valid customerCommand: CreateCustomerCommand, bindingResult: BindingResult, model: Model, attributes: RedirectAttributes, request: HttpServletRequest) : ModelAndView {
         if (bindingResult.hasErrors()) {
-            return addFormErrorFlashMessage(ModelAndView("customers/new", mapOf("customerCommand" to customerCommand)))
+            return addFormErrorFlashMessage(ModelAndView("customers/new", mapOf("customerCommand" to customerCommand)), request)
         }
 
         customerService.create(customerCommand)
@@ -56,7 +56,7 @@ class CustomersController(private val customerService: CustomerService) : Abstra
         }
 
         if (bindingResult.hasErrors()) {
-            return addFormErrorFlashMessage(ModelAndView("customers/edit", mapOf("updateCommand" to customerCommand)))
+            return addFormErrorFlashMessage(ModelAndView("customers/edit", mapOf("updateCommand" to customerCommand)), request)
         }
 
         customerService.update(customerId(request)!!, customerCommand)
@@ -67,7 +67,7 @@ class CustomersController(private val customerService: CustomerService) : Abstra
     @PostMapping("/login")
     fun login(@Valid @ModelAttribute loginCommand: LoginCommand, bindingResult: BindingResult, attributes: RedirectAttributes, request: HttpServletRequest) : ModelAndView {
         if (bindingResult.hasErrors()) {
-            val errorMsg = bindingResultTranslator.getMessages(bindingResult, request).joinToString("; ")
+            val errorMsg = i18nService.getMessages(bindingResult, request).joinToString("; ")
 
             return redirectWithErrorMsg("/", errorMsg, attributes)
         }

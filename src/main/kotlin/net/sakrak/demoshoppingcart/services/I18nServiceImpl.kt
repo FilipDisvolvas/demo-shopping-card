@@ -10,7 +10,7 @@ import org.springframework.web.servlet.LocaleResolver
 import javax.servlet.http.HttpServletRequest
 
 @Service
-class BindingResultTranslatorImpl : BindingResultTranslator {
+class I18nServiceImpl : I18nService {
     @Autowired
     lateinit var env: Environment
 
@@ -19,6 +19,16 @@ class BindingResultTranslatorImpl : BindingResultTranslator {
 
     @Autowired
     lateinit var localeResolver: LocaleResolver
+
+    override fun getMessage(i18nCode: String, request: HttpServletRequest): String? {
+        val locale = localeResolver.resolveLocale(request)
+
+        return if (env.activeProfiles.contains("test")) {
+                messageSource.getMessage(i18nCode, arrayOf(), locale)
+        } else {
+                messageSource.getMessage(i18nCode, arrayOf(), i18nCode, locale)
+        }
+    }
 
     override fun getMessages(bindingResult: BindingResult, request: HttpServletRequest): List<String> {
         val locale = localeResolver.resolveLocale(request)

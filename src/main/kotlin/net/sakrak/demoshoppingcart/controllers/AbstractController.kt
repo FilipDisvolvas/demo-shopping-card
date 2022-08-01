@@ -1,15 +1,12 @@
 package net.sakrak.demoshoppingcart.controllers
 
 import net.sakrak.demoshoppingcart.domain.Customer
-import net.sakrak.demoshoppingcart.services.BindingResultTranslator
+import net.sakrak.demoshoppingcart.services.I18nService
 import net.sakrak.demoshoppingcart.services.CustomerService
 import net.sakrak.demoshoppingcart.services.RedirectService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.ui.Model
-import org.springframework.ui.set
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import org.springframework.web.util.UriBuilder
 import org.springframework.web.util.UriComponentsBuilder
 import java.net.URI
 import javax.servlet.http.HttpServletRequest
@@ -22,7 +19,7 @@ abstract class AbstractController {
     private lateinit var customerService: CustomerService
 
     @Autowired
-    protected lateinit var bindingResultTranslator: BindingResultTranslator
+    protected lateinit var i18nService: I18nService
 
     protected fun redirectReferer(request: HttpServletRequest) = redirectService.buildCleanRedirect(request.getHeader("Referer"))
 
@@ -46,13 +43,13 @@ abstract class AbstractController {
         return redirectService.buildCleanRedirect(request.getHeader("Referer") ?: "/")
     }
 
-    protected fun addFormErrorFlashMessage(modelAndView: ModelAndView): ModelAndView {
-        modelAndView.model["errorFlash"] = "Bitte korrigiere die unten aufgeführten Fehler"
+    protected fun addFormErrorFlashMessage(modelAndView: ModelAndView, request: HttpServletRequest): ModelAndView {
+        modelAndView.model["errorFlash"] = i18nService.getMessage("standardErrorFlash.invalidForm", request)!!
         return modelAndView
     }
 
     protected fun redirectWithLoginErrorMsg(request: HttpServletRequest, attributes: RedirectAttributes) : ModelAndView {
-        return redirectWithErrorMsg(buildRedirectUrl(request), "Du bist nicht eingeloggt",  attributes)
+        return redirectWithErrorMsg(buildRedirectUrl(request), i18nService.getMessage("standardErrorFlash.notLoggedIn", request)!!,  attributes)
     }
 
     protected fun isLoggedIn(request: HttpServletRequest): Boolean {

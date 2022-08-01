@@ -37,7 +37,7 @@ class BasketController : AbstractController() {
         val customerId = customerId(request) ?: return redirectWithLoginErrorMsg(request, attributes)
 
         if (bindingResult.hasErrors()) {
-            val errorMessage = bindingResultTranslator.getMessages(bindingResult, request).joinToString("; ")
+            val errorMessage = i18nService.getMessages(bindingResult, request).joinToString("; ")
             return redirectWithErrorMsg(request, errorMessage, attributes)
         }
 
