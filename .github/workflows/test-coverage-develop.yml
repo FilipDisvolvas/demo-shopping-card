@@ -21,7 +21,12 @@ jobs:
           ##./gradlew clean build integrationTest --no-daemon &&
           git config --global user.name "github-actions[bot]" &&
           git config --global user.email "51759+github-actions[bot]@users.noreply.github.com" &&
+          git branch --show-current &&
           git fetch origin master &&
-          git merge master --ff &&
+          git checkout -B master origin/master &&
+          git checkout develop &&
+          git fetch origin master &&
+          git merge master --ff --no-edit &&
           git checkout master &&
-          git merge develop --ff
+          git fetch origin master &&
+          git merge develop --ff --no-edit
