@@ -22,6 +22,6 @@ jobs:
           git config --global user.name "github-actions[bot]" &&
           git config --global user.email "51759+github-actions[bot]@users.noreply.github.com" &&
           git fetch origin master &&
-          git merge master --ff &&
+          git merge origin/master --ff &&
           git checkout master &&
           git merge develop --ff
