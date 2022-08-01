@@ -4,6 +4,10 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  workflow_run:
+    workflows: ["develop branch"]
+    types:
+      - completed
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -48,4 +52,8 @@ jobs:
           sed -i -E 's/^(!\[test status\].*)(\?cache-buster=.+)/\1?cache-buster='$RANDOM'\)/' README.md &&
           git add .github/badges/jacoco.svg README.md &&
           git commit -m "Update jacoco.svg" .github/badges/jacoco.svg README.md &&
+          git push &&
+          git fetch --unshallow &&
+          git checkout -B develop origin/develop &&
+          git merge master --no-edit &&
           git push || true
