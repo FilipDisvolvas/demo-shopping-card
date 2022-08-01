@@ -8,27 +8,21 @@
   <header th:insert="/fragments/_general :: header"> </header>
   <!--@thymesVar id="newCustomer" type="net.sakrak.demoshoppingcart.commands.CreateCustomerCommand"-->
 
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <h2>Neues Benutzerkonto anlegen</h2>
+    <h2>Neues Benutzerkonto anlegen</h2>
 
 
-        <form action="#" th:action="@{/customers/registration}" th:object="${customerCommand}" method="post">
-          <div th:replace="fragments/_form :: inputText(entityName='customer', inputField='firstName', required=true)"></div>
-          <div th:replace="fragments/_form :: inputText(entityName='customer', inputField='middleName')"></div>
-          <div th:replace="fragments/_form :: inputText(entityName='customer', inputField='lastName', required=true)"></div>
-          <div th:replace="fragments/_form :: inputText(entityName='customer', inputField='email', required=true)"></div>
-          <div th:replace="fragments/_form :: inputText(entityName='customer', inputField='addressFirstLine', required=true)"></div>
-          <div th:replace="fragments/_form :: inputText(entityName='customer', inputField='addressSecondLine', required=true)"></div>
-          <div th:replace="fragments/_form :: inputText(entityName='customer', inputField='addressThirdLine')"></div>
-          <div th:replace="fragments/_form :: inputPassword(entityName='customer', inputField='password', required=true)"></div>
-          <div th:replace="fragments/_form :: inputPassword(entityName='customer', inputField='passwordRepitition', required=true)"></div>
+    <form action="#" th:action="@{/customers/registration}" th:object="${customerCommand}" method="post" class="w-25 p-3">
+      <div th:replace="fragments/_form :: inputText(entityName='customer', inputField='firstName', required=true)"></div>
+      <div th:replace="fragments/_form :: inputText(entityName='customer', inputField='middleName')"></div>
+      <div th:replace="fragments/_form :: inputText(entityName='customer', inputField='lastName', required=true)"></div>
+      <div th:replace="fragments/_form :: inputText(entityName='customer', inputField='email', required=true)"></div>
+      <div th:replace="fragments/_form :: inputText(entityName='customer', inputField='addressFirstLine', required=true)"></div>
+      <div th:replace="fragments/_form :: inputText(entityName='customer', inputField='addressSecondLine', required=true)"></div>
+      <div th:replace="fragments/_form :: inputText(entityName='customer', inputField='addressThirdLine')"></div>
+      <div th:replace="fragments/_form :: inputPassword(entityName='customer', inputField='password', required=true)"></div>
+      <div th:replace="fragments/_form :: inputPassword(entityName='customer', inputField='passwordRepitition', required=true)"></div>
 
-          <p><input type="submit" value="Submit" /></p>
-        </form>
-      </div>
-    </div>
-  </div>
+      <p><input type="submit" value="Submit" /></p>
+    </form>
 </body>
 </html>
