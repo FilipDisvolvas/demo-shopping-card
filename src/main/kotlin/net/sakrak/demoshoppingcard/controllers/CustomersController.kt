@@ -39,9 +39,7 @@ class CustomersController(private val customerService: CustomerService) : Abstra
 
         customerService.create(customerCommand)
 
-        return ModelAndView("customers/registration/index", mapOf("customerCommand" to customerCommand))
-
-        //return redirectWithSuccessMsg("/", "Die Registrierung ist abgeschlossen.", attributes)
+        return redirectWithSuccessMsg("/", "Die Registrierung ist abgeschlossen.", attributes)
     }
 
     @GetMapping("/edit")

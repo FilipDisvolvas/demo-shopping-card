@@ -14,7 +14,7 @@ class ProductsController(private val productService: ProductService) {
     @GetMapping(path = ["", "/"])
     fun index(model: Model): String {
         model["products"] = productService.findAll()
-        model["newBasketEntry"] = CreateBasketEntryCommand(null, null)
+        model["newBasketEntry"] = CreateBasketEntryCommand()
 
         return "products/index"
     }

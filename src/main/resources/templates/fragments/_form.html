@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+</head>
+<body>
+  <div th:fragment="inputText" class="form-outline">
+    <label th:for="${inputField}" th:text="#{${entityName} + '.' + ${inputField}}">First name<sup th:if="${required == true}">*</sup></label>
+    <input class="form-control" th:classappend="${#fields.hasErrors(inputField) ? 'is-invalid' : ''}" type="text" th:field="*{__${inputField}__}" />
+    <div th:if="${#fields.hasErrors(inputField)}" th:errors="*{__${inputField}__}">dfsdfsdf</div>
+  </div>
+
+  <div th:fragment="inputPassword" class="input-group">
+      <label th:for="${inputField}" th:text="#{${entityName} + '.' + ${inputField}}">First name</label>
+      <input type="password" th:field="*{__${inputField}__}" />
+      <div th:if="${#fields.hasErrors(inputField)}" th:errors="*{__${inputField}__}">dfsdfsdf</div>
+  </div>
+
+</body>
+</html>

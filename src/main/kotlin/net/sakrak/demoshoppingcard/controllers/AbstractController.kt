@@ -1,9 +1,12 @@
 package net.sakrak.demoshoppingcard.controllers
 
 import net.sakrak.demoshoppingcard.domain.Customer
+import net.sakrak.demoshoppingcard.services.BindingResultTranslator
 import net.sakrak.demoshoppingcard.services.CustomerService
 import net.sakrak.demoshoppingcard.services.RedirectService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.MessageSource
+import org.springframework.web.servlet.LocaleResolver
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import javax.servlet.http.HttpServletRequest
@@ -14,6 +17,9 @@ abstract class AbstractController {
 
     @Autowired
     private lateinit var customerService: CustomerService
+
+    @Autowired
+    protected lateinit var bindingResultTranslator: BindingResultTranslator
 
     protected fun redirectReferer(request: HttpServletRequest) = redirectService.buildCleanRedirect(request.getHeader("Referer"))
 
