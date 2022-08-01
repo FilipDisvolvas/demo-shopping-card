@@ -39,7 +39,7 @@
                     <a th:href="@{/customers/logout}">Ausloggen</a>
                 </div>
                 <div class="text-end" th:if="${#strings.isEmpty(greetingCustomerName)}">
-                    <!--@thymesVar id="loginCustomer" type="net.sakrak.demoshoppingcard.commands.LoginCommand"-->
+                    <!--@thymesVar id="loginCustomer" type="net.sakrak.demoshoppingcart.commands.LoginCommand"-->
 
                     <form action="#" th:action="@{/customers/login}" th:object="${loginCommand}" method="post" class="form-inline">
                         <!-- form action="#" th:action="@{/customers/login}" method="post" style="display: inline-block" -->
