@@ -19,6 +19,7 @@ jobs:
           cache: 'gradle'
       - run:
           ./gradlew clean build integrationTest --no-daemon &&
+          git fetch origin master &&
           git checkout master &&
           git pull &&
           git checkout develop &&
