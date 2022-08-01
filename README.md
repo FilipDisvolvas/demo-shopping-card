@@ -1,6 +1,6 @@
 Demo-Warenkorb
 ==============
-![build status](https://github.com/FilipDisvolvas/demo-shopping-cart/actions/workflows/test-coverage-master.yml/badge.svg?branch=master)
+![build status](https://github.com/FilipDisvolvas/demo-shopping-cart/actions/workflows/test-master.yml/badge.svg?branch=master)
 ![test status](https://raw.githubusercontent.com/FilipDisvolvas/demo-shopping-cart/master/.github/badges/jacoco.svg?cache-buster=97)
 
 
