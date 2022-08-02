@@ -1,5 +1,6 @@
 package net.sakrak.demoshoppingcart.controllers
 
+import javax.validation.Valid
 import net.sakrak.demoshoppingcart.commands.CreateCustomerCommand
 import net.sakrak.demoshoppingcart.commands.LoginCommand
 import net.sakrak.demoshoppingcart.commands.UpdateCustomerCommand
@@ -8,13 +9,11 @@ import net.sakrak.demoshoppingcart.services.CustomerService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
-import org.springframework.validation.ObjectError
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import javax.servlet.http.HttpServletRequest
-import javax.validation.Valid
 
 
 @Controller

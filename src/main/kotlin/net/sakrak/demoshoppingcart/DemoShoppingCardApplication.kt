@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class DemoShoppingCardApplication
 
 fun main(args: Array<String>) {
-    runApplication<DemoShoppingCardApplication>(*args)
+    val foo = runApplication<DemoShoppingCardApplication>(*args)
 }

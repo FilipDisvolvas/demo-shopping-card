@@ -10,6 +10,7 @@ plugins {
     id("io.freefair.lombok") version "6.5.0.3"
     id("org.unbroken-dome.test-sets") version "4.0.0"
     jacoco
+    id("java")
 }
 
 group = "net.sakrak"
@@ -23,6 +24,7 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
     //implementation("org.springframework:spring-webmvc")

@@ -10,6 +10,7 @@ Ein paar Produkte werden auf der Startseite  aufgelistet, die sich der
 Kunde in den Warenkorb legen kann. Damit er das kann,  muss er sich im
 aktuellen Entwicklungsstand erstmal registrieren und dann anmelden.
 
+Ein paar Learnings sind [hier](IMPLEMENTATION.md) zu finden.
 
 Tech Stack
 --------------
